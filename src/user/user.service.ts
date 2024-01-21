@@ -15,7 +15,6 @@ export class UserService {
    */
   async create(createUserDto: CreateUserDto) {
     const { password, name, email } = createUserDto;
-
     const password_hash = await argon2.hash(password);
 
     try {
