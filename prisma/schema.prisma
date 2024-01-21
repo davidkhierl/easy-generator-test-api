@@ -63,7 +63,5 @@ model SessionToken {
   user_id    String  @db.ObjectId
   session_id String? @unique
 
-  // session    Session? @relation(fields: [session_id], references: [id])
-  // session_id String?  @unique @db.ObjectId
   @@map("session_tokens")
 }
