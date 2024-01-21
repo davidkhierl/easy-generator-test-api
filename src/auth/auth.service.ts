@@ -102,7 +102,6 @@ export class AuthService {
     session: ExpressSession,
     options?: { consume?: boolean; status?: SessionTokenStatus },
   ) {
-    console.log(session.id);
     if (!session.refresh_token) return;
 
     try {
