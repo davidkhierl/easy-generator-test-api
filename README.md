@@ -35,6 +35,11 @@ $ pnpm install
 ## Running the app
 
 ```bash
+# provision database
+$ docker-compose up -d
+$ prisma db push
+$ prisma generate
+
 # development
 $ pnpm run start
 

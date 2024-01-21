@@ -10,10 +10,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  email String @unique
-  name  String
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  email          String         @unique
+  password_hash  String
+  name           String
+  role           UserRole       @default(USER)
+  session_tokens SessionToken[]
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
 
   @@map("users")
+}
+
+// model Session {
+//   id            String        @id @default(auto()) @map("_id") @db.ObjectId
+//   expires       DateTime
+//   session_token SessionToken?
+//
+//   @@map("sessions")
+// }
+
+enum TokenType {
+  REFRESH_TOKEN
+}
+
+enum SessionTokenStatus {
+  ACTIVE
+  EXPIRED
+  INVALIDATED_BY_USER
+  LOGOUT
+  REFRESHED
+}
+
+model SessionToken {
+  id             String             @id @default(auto()) @map("_id") @db.ObjectId
+  token          String
+  status         SessionTokenStatus @default(ACTIVE)
+  ip             String?
+  location       String?
+  used_at        DateTime?
+  invalidated_at DateTime?
+  created_at     DateTime           @default(now())
+  updated_at     DateTime           @updatedAt
+
+  user       User    @relation(fields: [user_id], references: [id])
+  user_id    String  @db.ObjectId
+  session_id String? @unique
+
+  // session    Session? @relation(fields: [session_id], references: [id])
+  // session_id String?  @unique @db.ObjectId
+  @@map("session_tokens")
 }
