@@ -32,6 +32,9 @@ dependencies:
   argon2:
     specifier: ^0.31.2
     version: 0.31.2
+  bson-objectid:
+    specifier: ^2.0.4
+    version: 2.0.4
   class-transformer:
     specifier: ^0.5.1
     version: 0.5.1
@@ -3438,6 +3441,10 @@ packages:
     dependencies:
       node-int64: 0.4.0
     dev: true
+
+  /bson-objectid@2.0.4:
+    resolution: {integrity: sha512-vgnKAUzcDoa+AeyYwXCoHyF2q6u/8H46dxu5JN+4/TZeq/Dlinn0K6GvxsCLb3LHUJl0m/TLiEK31kUwtgocMQ==}
+    dev: false
 
   /bson@4.7.2:
     resolution: {integrity: sha512-Ry9wCtIZ5kGqkJoi6aD8KjxFZEx78guTQDnpXWiNthsxzrxAK/i8E6pCHAIZTbaEFWcOCvbecMukfK7XUvyLpQ==}

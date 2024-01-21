@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { SessionTokenStatus, User } from '@prisma/client';
 import * as argon2 from 'argon2';
+import ObjectID from 'bson-objectid';
 import dayjs from 'dayjs';
 
 @Injectable()
@@ -68,7 +69,7 @@ export class AuthService {
       data: {
         status: SessionTokenStatus.REFRESHED,
         used_at: dayjs().toDate(),
-        session_id: '',
+        session_id: ObjectID().toHexString(),
       },
     });
 
@@ -105,21 +106,32 @@ export class AuthService {
     if (!session.refresh_token) return;
 
     try {
-      await this.prismaService.sessionToken.update({
+      const sessionToken = await this.prismaService.sessionToken.findFirst({
         where: { session_id: session.id },
-        data: {
-          status: options.status,
-          used_at: options?.consume ? dayjs().toDate() : undefined,
-          invalidated_at: dayjs().toDate(),
-          session_id: '',
-        },
       });
+
+      if (sessionToken) {
+        await this.prismaService.sessionToken.update({
+          where: { id: sessionToken.id },
+          data: {
+            status: options.status,
+            used_at: options?.consume ? dayjs().toDate() : undefined,
+            invalidated_at: dayjs().toDate(),
+            session_id: ObjectID().toHexString(),
+          },
+        });
+      }
     } catch (err) {
       console.log(err);
+      session.destroy((error) => {
+        console.log('Session destroyed');
+        if (error) throw new InternalServerErrorException(error);
+      });
       throw new UnauthorizedException();
     }
 
     session.destroy((error) => {
+      console.log('Session destroyed');
       if (error) throw new InternalServerErrorException(error);
     });
   }
