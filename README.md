@@ -34,6 +34,9 @@ $ pnpm install
 
 ## Running the app
 
+create a `.env` file and copy the contents from `.env.example`.
+make sure docker is installed or you can update the `DATABASE_URL` environment variable if you already have a running `mongodb`
+
 ```bash
 # provision database
 $ docker-compose up -d
